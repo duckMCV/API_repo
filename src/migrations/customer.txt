@@ -1,0 +1,126 @@
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for accounts
+-- ----------------------------
+DROP TABLE IF EXISTS `accounts`;
+CREATE TABLE `accounts`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `password` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `status` tinyint(1) NULL DEFAULT NULL,
+  `refresh_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `token_expires` bigint UNSIGNED NULL DEFAULT NULL,
+  `is_deleted` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `newPassword` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `oldPassword` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `role_id` int UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `email`(`email` ASC) USING BTREE,
+  INDEX `fk1`(`role_id` ASC) USING BTREE,
+  CONSTRAINT `fk1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for categories
+-- ----------------------------
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE `categories`  (
+  `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `slug` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `image` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `creator` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `viewed` bigint NULL DEFAULT NULL,
+  `status` tinyint NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for logs
+-- ----------------------------
+DROP TABLE IF EXISTS `logs`;
+CREATE TABLE `logs`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `account_id` text CHARACTER SET utf16 COLLATE utf16_general_ci NULL,
+  `type` text CHARACTER SET utf16 COLLATE utf16_general_ci NULL,
+  `module` text CHARACTER SET utf16 COLLATE utf16_general_ci NULL,
+  `item_id` text CHARACTER SET utf16 COLLATE utf16_general_ci NULL,
+  `status` smallint NULL DEFAULT NULL,
+  `detail` text CHARACTER SET utf16 COLLATE utf16_general_ci NULL,
+  `is_deleted` tinyint(1) NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 86 CHARACTER SET = utf16 COLLATE = utf16_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for modules
+-- ----------------------------
+DROP TABLE IF EXISTS `modules`;
+CREATE TABLE `modules`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf16 COLLATE utf16_general_ci NOT NULL,
+  `module` varchar(255) CHARACTER SET utf16 COLLATE utf16_general_ci NOT NULL,
+  `icon` varchar(255) CHARACTER SET utf16 COLLATE utf16_general_ci NOT NULL DEFAULT '',
+  `status` tinyint UNSIGNED NULL DEFAULT 0,
+  `is_deleted` tinyint UNSIGNED NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `name_cmswebsite` text CHARACTER SET utf16 COLLATE utf16_general_ci NULL,
+  `sort_order` int UNSIGNED NULL DEFAULT 0,
+  `is_function` tinyint UNSIGNED NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf16 COLLATE = utf16_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for news
+-- ----------------------------
+DROP TABLE IF EXISTS `news`;
+CREATE TABLE `news`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `event_id` int NOT NULL,
+  `new_category_id` int UNSIGNED NOT NULL,
+  `title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `slug` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `creator` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `status` tinyint NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `news_ibfk_1`(`new_category_id` ASC) USING BTREE,
+  CONSTRAINT `news_ibfk_1` FOREIGN KEY (`new_category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for roles
+-- ----------------------------
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf16 COLLATE utf16_general_ci NOT NULL,
+  `permissions` text CHARACTER SET utf16 COLLATE utf16_general_ci NOT NULL,
+  `status` tinyint UNSIGNED NULL DEFAULT 0,
+  `is_deleted` tinyint UNSIGNED NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `level` tinyint UNSIGNED NULL DEFAULT 0,
+  `db_filters` text CHARACTER SET utf16 COLLATE utf16_general_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf16 COLLATE = utf16_general_ci ROW_FORMAT = DYNAMIC;
+
+SET FOREIGN_KEY_CHECKS = 1;
